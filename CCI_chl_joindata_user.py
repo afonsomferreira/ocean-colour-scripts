@@ -2,6 +2,11 @@
 """
 Created on Wed Jul 29 11:53:48 2020
 
+Joins different datafiles downloaded with "CCI_chl_download...py" scripts along the temporal dimension of the dataset.
+
+Note that this script should only be used after using the CCI_chl_download scripts. Else, make sure the data is stored
+in .npz files and that the name of the variables match.
+
 @author: ambferreira
 """
 import os
