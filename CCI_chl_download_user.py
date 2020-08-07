@@ -2,7 +2,15 @@
 """
 Created on Wed Jul 29 14:47:00 2020
 
-@author: PhytoTroph
+Downloads chlorophyll a 3D (latitude x longitude x time) dataset from the Ocean Colour - Climate Change Initiave (OC-CCI) using OPENDAP.
+
+Please note that this is the user input version of this script. If you do feel comfortable writing Python code and would prefer to
+open this script in an IDE or text editor, check the manual version of this script.
+
+Only works for the OC-CCI v5 daily dataset with 4km resolution (most recent). Future versions will allow downloading older datasets.
+
+
+@author: ambferreira
 """
 
 import os
