@@ -44,7 +44,8 @@ def join_datafiles(file_directory):
 print('Please store datafiles that you wish to join in a single folder with no other .npz files')
 print('Please make sure the files are in the correct alphabetical and temporal order')
 # C:\\Users\PhytoTroph\Documents\Artigos\NA_Anomaly_2009\datasets\datafiles_chl_2009
-file_dir = input("Please enter the directory where your datafiles are located:")
+#file_dir = input("Please enter the directory where your datafiles are located:")
+file_dir = 'C:\\Users\\Afonso\\Documents\\Trabalho\\Artigos\\socean-algorithm-2021\\resources\\cci_antarcticpeninsula\\'
 os.chdir(file_dir)
 ### Loads and joins every file
 chl, lat, lon, time, time_date = join_datafiles(file_dir)

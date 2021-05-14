@@ -82,39 +82,77 @@ def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date
     time_array_date = np.empty(len(time_array), dtype=np.object)
     for i, item in enumerate(time_array):
         time_array_date[i] = serial_date_to_string(int(time_array[i]))
-    chl = np.array(nc_in.variables['chlor_a'][time_start_ind:time_start_end,
+    #Rrs412
+    #rrs412 = np.array(nc_in.variables['Rrs_412'][time_start_ind:time_start_end,
+    #                                          lat_lb:lat_ub, lon_lb:lon_ub])
+    # Swaps axes to lon, lat, time
+    #rrs412 = np.swapaxes(np.swapaxes(rrs412, 0, 2), 0, 1)
+    # Replaces invalid values with NaNs
+    #rrs412[rrs412 == 9.96921E36] = np.nan
+    #Rrs443
+    rrs443 = np.array(nc_in.variables['Rrs_443'][time_start_ind:time_start_end,
                                               lat_lb:lat_ub, lon_lb:lon_ub])
     # Swaps axes to lon, lat, time
-    chl = np.swapaxes(np.swapaxes(chl, 0, 2), 0, 1)
+    rrs443 = np.swapaxes(np.swapaxes(rrs443, 0, 2), 0, 1)
     # Replaces invalid values with NaNs
-    chl[chl == 9.96921E36] = np.nan
-    return chl, lat, lon, time_array, time_array_date
+    rrs443[rrs443 == 9.96921E36] = np.nan    
+    #Rrs490
+    rrs490 = np.array(nc_in.variables['Rrs_490'][time_start_ind:time_start_end,
+                                              lat_lb:lat_ub, lon_lb:lon_ub])
+    # Swaps axes to lon, lat, time
+    rrs490 = np.swapaxes(np.swapaxes(rrs490, 0, 2), 0, 1)
+    # Replaces invalid values with NaNs
+    rrs490[rrs490 == 9.96921E36] = np.nan        
+    #Rrs510
+    rrs510 = np.array(nc_in.variables['Rrs_510'][time_start_ind:time_start_end,
+                                              lat_lb:lat_ub, lon_lb:lon_ub])
+    # Swaps axes to lon, lat, time
+    rrs510 = np.swapaxes(np.swapaxes(rrs510, 0, 2), 0, 1)
+    # Replaces invalid values with NaNs
+    rrs510[rrs510 == 9.96921E36] = np.nan       
+    #Rrs555
+    rrs555 = np.array(nc_in.variables['Rrs_555'][time_start_ind:time_start_end,
+                                              lat_lb:lat_ub, lon_lb:lon_ub])
+    # Swaps axes to lon, lat, time
+    rrs555 = np.swapaxes(np.swapaxes(rrs555, 0, 2), 0, 1)
+    # Replaces invalid values with NaNs
+    rrs555[rrs555 == 9.96921E36] = np.nan        
+    #Rrs670
+    #rrs670 = np.array(nc_in.variables['Rrs_670'][time_start_ind:time_start_end,
+    #                                          lat_lb:lat_ub, lon_lb:lon_ub])
+    # Swaps axes to lon, lat, time
+    #rrs670 = np.swapaxes(np.swapaxes(rrs670, 0, 2), 0, 1)
+    # Replaces invalid values with NaNs
+    #rrs670[rrs670 == 9.96921E36] = np.nan          
+    
+    return rrs443, rrs490, rrs510, rrs555,  lat, lon, time_array, time_array_date
 ### Define ROI
 #Please enter upper right corner latitude [-90-90°N]:
-lat_max = '55'
+lat_max = '-80'
 #Please enter lower left corner latitude [-90-90°N]:
-lat_min = '-55'
+lat_min = '-85'
 #Please enter upper right corner longitude [-180-180°E]:
-lon_max = '12'
+lon_max = '180'
 #Please enter lower left corner longitude [-180-180°E]:
-lon_min = '-70'
+lon_min = '90'
 LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
 ### Define timespan
 # Please enter initial day [YYYY-MM-DD]:
-time_start = '2018-10-21'
+time_start = '1998-01-01'
 # Please enter final day [YYYY-MM-DD]:
-time_end = '2018-11-11'
+time_end = '1998-12-31'
 time_start_datetime, time_end_datetime = define_time(time_start, time_end)
 ### Download data
 #Please enter the desired name for the downloaded file
-filename_out_chl = 'cci_chl_timeseries_nov'
-chl, lat, lon, time_array, time_array_date = download_cci(LATBD,
+filename_out_chl = 'cci_rrs_download_1998_8085_4'
+rrs443, rrs490, rrs510, rrs555, lat, lon, time_array, time_array_date = download_cci(LATBD,
                                                           LONBD,
                                                           time_start_datetime,
                                                           time_end_datetime)
 ### Save data in Downloads Folder by default
 os.chdir(str(Path.home() / "Downloads"))
-np.savez_compressed(filename_out_chl, lat=lat, lon=lon, chl=chl,
+np.savez_compressed(filename_out_chl, lat=lat, lon=lon,
+                    rrs443=rrs443, rrs490=rrs490, rrs510=rrs510, rrs555=rrs555,
                     time=time_array, time_date=time_array_date)
 
 #os.chdir('C:\\Users\\Afonso\\Downloads')
