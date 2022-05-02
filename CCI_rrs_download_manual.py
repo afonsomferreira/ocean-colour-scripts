@@ -138,13 +138,13 @@ lon_min = '90'
 LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
 ### Define timespan
 # Please enter initial day [YYYY-MM-DD]:
-time_start = '1998-01-01'
+time_start = '2020-01-01'
 # Please enter final day [YYYY-MM-DD]:
-time_end = '1998-12-31'
+time_end = '2020-01-31'
 time_start_datetime, time_end_datetime = define_time(time_start, time_end)
 ### Download data
 #Please enter the desired name for the downloaded file
-filename_out_chl = 'cci_rrs_download_1998_8085_4'
+filename_out_chl = 'cci_rrs_download_2020'
 rrs443, rrs490, rrs510, rrs555, lat, lon, time_array, time_array_date = download_cci(LATBD,
                                                           LONBD,
                                                           time_start_datetime,

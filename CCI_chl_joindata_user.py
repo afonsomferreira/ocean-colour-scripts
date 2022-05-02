@@ -22,12 +22,13 @@ def join_datafiles(file_directory):
     check_dir = input('Do you want to proceed and start joining them? [Y/N]')
     if check_dir != 'Y':
         sys.exit("ERROR: Please repeat")
-    for i in file_names[-1]:
+    for i in file_names:
         print(i)
         file_temp = np.load(i, allow_pickle=True)
-        chl_temp = np.float16(file_temp['chl'])
-        time_temp = file_temp['time']
-        time_date_temp = file_temp['time_date']
+        chl_temp = np.float64(file_temp['chl'])
+        chl_temp = chl_temp[:,:,:-1]
+        time_temp = file_temp['time'][:-1]
+        time_date_temp = file_temp['time_date'][:-1]
         if i == file_names[0]:
             chl = chl_temp
             lat = file_temp['lat']
@@ -45,11 +46,11 @@ print('Please store datafiles that you wish to join in a single folder with no o
 print('Please make sure the files are in the correct alphabetical and temporal order')
 # C:\\Users\PhytoTroph\Documents\Artigos\NA_Anomaly_2009\datasets\datafiles_chl_2009
 #file_dir = input("Please enter the directory where your datafiles are located:")
-file_dir = 'C:\\Users\\Afonso\\Documents\\Trabalho\\Artigos\\socean-algorithm-2021\\resources\\cci_antarcticpeninsula\\'
+file_dir = 'C:\\Users\\afons\\Documents\\artigos\\coccos-chase-2021\\resources\\chl\\19982020'
 os.chdir(file_dir)
 ### Loads and joins every file
 chl, lat, lon, time, time_date = join_datafiles(file_dir)
 ### Save as a unique file
-np.savez_compressed('data_joined', lat=lat, lon=lon, chl=chl,
+np.savez_compressed('chl_amt19982020', lat=lat, lon=lon, chl=chl,
                     time=time, time_date=time_date)
 print('Done!')
