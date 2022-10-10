@@ -4,9 +4,8 @@ Created on Wed Jul 29 14:47:00 2020
 
 Downloads chlorophyll a 3D (latitude x longitude x time) dataset from the Ocean Colour - Climate Change Initiave (OC-CCI) using OPENDAP.
 
-Please note that this is the manual version of this script. If you do not feel comfortable writing Python code, check the user input version of this script.
-
-Only works for the OC-CCI v5 daily dataset with 4km resolution (most recent). Future versions will allow downloading older datasets.
+Only works for the OC-CCI v5 daily dataset with 4km resolution (most recent).
+For other versions, change the link in line 63.
 
 @author: ambferreira
 """
@@ -89,25 +88,28 @@ def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date
     # Replaces invalid values with NaNs
     chl[chl == 9.96921E36] = np.nan
     return chl, lat, lon, time_array, time_array_date
-### Define ROI
+### Define ROI (Must be rectangle-shaped)
 #Please enter upper right corner latitude [-90-90°N]:
-lat_max = '55'
+lat_max = '-48'
 #Please enter lower left corner latitude [-90-90°N]:
-lat_min = '-10'
+lat_min = '-70'
 #Please enter upper right corner longitude [-180-180°E]:
-lon_max = '0'
+lon_max = '-25'
 #Please enter lower left corner longitude [-180-180°E]:
-lon_min = '-70'
+lon_min = '-73'
 LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
 ### Define timespan
 # Please enter initial day [YYYY-MM-DD]:
-time_start = '2020-09-25'
+time_start = '2006-01-01'
+#time_start = '2006-07-01'
 # Please enter final day [YYYY-MM-DD]:
-time_end = '2020-10-11'
+time_end = '2006-06-30'
+#time_end = '2006-12-31'
+
 time_start_datetime, time_end_datetime = define_time(time_start, time_end)
 ### Download data
 #Please enter the desired name for the downloaded file
-filename_out_chl = 'cci_chl_timeseries_09sep11oct_2020'
+filename_out_chl = 'CCI_ALL-v5.0-DAILY_justchl_2006_1'
 chl, lat, lon, time_array, time_array_date = download_cci(LATBD,
                                                           LONBD,
                                                           time_start_datetime,
@@ -116,6 +118,3 @@ chl, lat, lon, time_array, time_array_date = download_cci(LATBD,
 os.chdir(str(Path.home() / "Downloads"))
 np.savez_compressed(filename_out_chl, lat=lat, lon=lon, chl=chl,
                     time=time_array, time_date=time_array_date)
-
-#os.chdir('C:\\Users\\Afonso\\Downloads')
-#filedata = np.load('OcN_randomforest_ready_v42.npz',allow_pickle = True)
