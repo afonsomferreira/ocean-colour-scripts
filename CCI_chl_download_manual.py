@@ -60,7 +60,7 @@ def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date
     """Downloads chl data from CCI v5 4km using previously defined
     Region of Interest and Time Period by user"""
     # Open netcdf4 file using OPENDAP
-    nc_in = nc4.Dataset('https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v5.0-DAILY')
+    nc_in = nc4.Dataset('https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v6.0-DAILY')
     # Extract latitude and longitude
     lati = nc_in.variables['lat'][:]
     loni = nc_in.variables['lon'][:]
@@ -90,26 +90,23 @@ def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date
     return chl, lat, lon, time_array, time_array_date
 ### Define ROI (Must be rectangle-shaped)
 #Please enter upper right corner latitude [-90-90°N]:
-lat_max = '-48'
+lat_max = '31'
 #Please enter lower left corner latitude [-90-90°N]:
-lat_min = '-70'
+lat_min = '23'
 #Please enter upper right corner longitude [-180-180°E]:
-lon_max = '-25'
+lon_max = '-79'
 #Please enter lower left corner longitude [-180-180°E]:
-lon_min = '-73'
+lon_min = '-86'
 LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
 ### Define timespan
 # Please enter initial day [YYYY-MM-DD]:
-time_start = '2006-01-01'
-#time_start = '2006-07-01'
+time_start = '2020-06-09'
 # Please enter final day [YYYY-MM-DD]:
-time_end = '2006-06-30'
-#time_end = '2006-12-31'
-
+time_end = '2020-06-16'
 time_start_datetime, time_end_datetime = define_time(time_start, time_end)
 ### Download data
 #Please enter the desired name for the downloaded file
-filename_out_chl = 'CCI_ALL-v5.0-DAILY_justchl_2006_1'
+filename_out_chl = 'CHL_exercise1_dailydata'
 chl, lat, lon, time_array, time_array_date = download_cci(LATBD,
                                                           LONBD,
                                                           time_start_datetime,
