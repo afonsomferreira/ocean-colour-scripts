@@ -59,8 +59,13 @@ def define_time(time_init, time_final):
 def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date):
     """Downloads chl data from CCI v5 4km using previously defined
     Region of Interest and Time Period by user"""
+<<<<<<< Updated upstream
     # Open netcdf4 file using OPENDAP
     nc_in = nc4.Dataset('https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v6.0-DAILY')
+=======
+    # Open netcdf4 file using OPENDAP (change the link if you want another version/resolution)
+    nc_in = nc4.Dataset('https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v5.0-1km-DAILY')
+>>>>>>> Stashed changes
     # Extract latitude and longitude
     lati = nc_in.variables['lat'][:]
     loni = nc_in.variables['lon'][:]
@@ -90,6 +95,7 @@ def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date
     return chl, lat, lon, time_array, time_array_date
 ### Define ROI (Must be rectangle-shaped)
 #Please enter upper right corner latitude [-90-90°N]:
+<<<<<<< Updated upstream
 lat_max = '31'
 #Please enter lower left corner latitude [-90-90°N]:
 lat_min = '23'
@@ -107,6 +113,25 @@ time_start_datetime, time_end_datetime = define_time(time_start, time_end)
 ### Download data
 #Please enter the desired name for the downloaded file
 filename_out_chl = 'CHL_exercise1_dailydata'
+=======
+lat_max = '38'
+#Please enter lower left corner latitude [-90-90°N]:
+lat_min = '36'
+#Please enter upper right corner longitude [-180-180°E]:
+lon_max = '-7'
+#Please enter lower left corner longitude [-180-180°E]:
+lon_min = '-9'
+LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
+### Define timespan
+# Please enter initial day [YYYY-MM-DD]:
+time_start = '2013-01-01'
+# Please enter final day [YYYY-MM-DD]:
+time_end = '2020-12-31'
+time_start_datetime, time_end_datetime = define_time(time_start, time_end)
+### Download data
+#Please enter the desired name for the downloaded file
+filename_out_chl = 'chl1km_areae_20132020'
+>>>>>>> Stashed changes
 chl, lat, lon, time_array, time_array_date = download_cci(LATBD,
                                                           LONBD,
                                                           time_start_datetime,
