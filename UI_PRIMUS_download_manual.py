@@ -2,10 +2,7 @@
 """
 Created on Wed Jul 29 14:47:00 2020
 
-Downloads chlorophyll a 3D (latitude x longitude x time) dataset from the Ocean Colour - Climate Change Initiave (OC-CCI) using OPENDAP.
-
-Only works for the OC-CCI v5 daily dataset with 4km resolution (most recent).
-For other versions, change the link in line 63.
+Downloads Upwelling Index 3D (latitude x longitude x time) dataset from the PRIMUS using OPENDAP.
 
 @author: ambferreira
 """
@@ -17,7 +14,7 @@ import numpy as np
 import netCDF4 as nc4
 def serial_date_to_string(srl_no):
     """Converts CCI serial number time to datetime"""
-    new_date = datetime.datetime(1970, 1, 1, 0, 0) + datetime.timedelta(srl_no)
+    new_date = datetime.datetime(1950, 1, 1, 0, 0) + datetime.timedelta(srl_no)
     return new_date
 def define_ROI(lat_upper, lat_lower, lon_upper, lon_lower):
     """Defines Region of Interest latitude and longitude to download"""
@@ -56,13 +53,11 @@ def define_time(time_init, time_final):
     print('Final date:', time_end)
     print('That corresponds to', time_diff, 'days.')
     return time_start_datetime, time_end_datetime
-def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date):
+def download_ui_primus(lat_boundaries, lon_boundaries, time_init_date, time_final_date):
     """Downloads chl data from CCI v5 4km using previously defined
     Region of Interest and Time Period by user"""
-    # Open netcdf4 file using OPENDAP
-    nc_in = nc4.Dataset('https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v6.0-DAILY')
     # Open netcdf4 file using OPENDAP (change the link if you want another version/resolution)
-    nc_in = nc4.Dataset('https://www.oceancolour.org/thredds/dodsC/CCI_ALL-v5.0-1km-DAILY')
+    nc_in = nc4.Dataset('https://rsg.pml.ac.uk/thredds/dodsC/primus/upwelling_index')
     # Extract latitude and longitude
     lati = nc_in.variables['lat'][:]
     loni = nc_in.variables['lon'][:]
@@ -83,57 +78,37 @@ def download_cci(lat_boundaries, lon_boundaries, time_init_date, time_final_date
     time_array_date = np.empty(len(time_array), dtype=np.object)
     for i, item in enumerate(time_array):
         time_array_date[i] = serial_date_to_string(int(time_array[i]))
-    chl = np.array(nc_in.variables['chlor_a'][time_start_ind:time_start_end,
+    ui = np.array(nc_in.variables['UI'][time_start_ind:time_start_end,
                                               lat_lb:lat_ub, lon_lb:lon_ub])
     # Swaps axes to lon, lat, time
-    chl = np.swapaxes(np.swapaxes(chl, 0, 2), 0, 1)
+    ui = np.swapaxes(np.swapaxes(ui, 0, 2), 0, 1)
     # Replaces invalid values with NaNs
-    chl[chl == 9.96921E36] = np.nan
-    return chl, lat, lon, time_array, time_array_date
+    ui[ui == 8.999999488E9] = np.nan
+    return ui, lat, lon, time_array, time_array_date
 ### Define ROI (Must be rectangle-shaped)
 #Please enter upper right corner latitude [-90-90°N]:
-<<<<<<< Updated upstream
-lat_max = '31'
+lat_max = '11'
 #Please enter lower left corner latitude [-90-90°N]:
-lat_min = '23'
+lat_min = '13'
 #Please enter upper right corner longitude [-180-180°E]:
-lon_max = '-79'
+lon_max = '-22'
 #Please enter lower left corner longitude [-180-180°E]:
-lon_min = '-86'
+lon_min = '-23'
 LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
 ### Define timespan
 # Please enter initial day [YYYY-MM-DD]:
-time_start = '2020-06-09'
+time_start = '2016-01-01'
 # Please enter final day [YYYY-MM-DD]:
-time_end = '2020-06-16'
+time_end = '2022-12-31'
 time_start_datetime, time_end_datetime = define_time(time_start, time_end)
 ### Download data
 #Please enter the desired name for the downloaded file
-filename_out_chl = 'CHL_exercise1_dailydata'
-=======
-lat_max = '38'
-#Please enter lower left corner latitude [-90-90°N]:
-lat_min = '36'
-#Please enter upper right corner longitude [-180-180°E]:
-lon_max = '-7'
-#Please enter lower left corner longitude [-180-180°E]:
-lon_min = '-9'
-LATBD, LONBD = define_ROI(lat_max, lat_min, lon_max, lon_min)
-### Define timespan
-# Please enter initial day [YYYY-MM-DD]:
-time_start = '2013-01-01'
-# Please enter final day [YYYY-MM-DD]:
-time_end = '2020-12-31'
-time_start_datetime, time_end_datetime = define_time(time_start, time_end)
-### Download data
-#Please enter the desired name for the downloaded file
-filename_out_chl = 'chl1km_areae_20132020'
->>>>>>> Stashed changes
-chl, lat, lon, time_array, time_array_date = download_cci(LATBD,
+filename_out = 'ui_CB_20162022'
+ui, lat, lon, time_array, time_array_date = download_ui_primus(LATBD,
                                                           LONBD,
                                                           time_start_datetime,
                                                           time_end_datetime)
 ### Save data in Downloads Folder by default
 os.chdir(str(Path.home() / "Downloads"))
-np.savez_compressed(filename_out_chl, lat=lat, lon=lon, chl=chl,
+np.savez_compressed(filename_out, lat=lat, lon=lon, ui=ui,
                     time=time_array, time_date=time_array_date)
